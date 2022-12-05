@@ -1,0 +1,29 @@
+apiVersion: v1   # version 
+kind: Service    # object çeşiti
+metadata:
+  name: add-delete-svc # isim verdik
+  labels:
+    app: add-delete
+spec:         # service in tipi clusterip
+  type: Nodeport 
+  ports:
+  - port: 80       # service in portu
+    targetPort: 80 # container portu
+    nodeport: 30001    #nodeporttan dışarı çıkış
+    
+  selector:
+    app: add-delete   # buraya böyle isim verilmiş selector pod un label ını yakalaması önemli.
+
+####
+# apiVersion: v1
+# kind: Service   
+# metadata:
+#   name: startup-svc
+# spec:
+#   type: NodePort  
+#   ports:
+#   - port: 80
+#     targetPort: 80
+#     nodePort: 30001
+#   selector:
+#     test: startup

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  labels:
+    app: mysql-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mysql-pod
+  template:
+    metadata:
+      labels:
+        app: mysql-pod
+    spec:
+      volumes:
+        - name: mysql-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+      containers:
+      - name: mysql
+        image: mysql:5.7
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - mountPath: /data/mysql
+          name: mysql-storage
+        env:     # bunları secretten alıyoruz.
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysqlsecret
+                key: mysql-admin-pass
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysqlsecret
+                key: mysql-root-pass
+        envFrom: # bunu configmapten alıyoruz
+          - configMapRef:
+            name: database-config    #mysql  config name (myswl database=phonebook u buradan aldık)
