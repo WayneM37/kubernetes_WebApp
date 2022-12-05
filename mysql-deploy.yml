@@ -15,9 +15,9 @@ spec:
         app: mysql-pod
     spec:
       volumes:
-        - name: mysql-storage
-          persistentVolumeClaim:
-            claimName: mysql-pv-claim
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
       containers:
       - name: mysql
         image: mysql:5.7
@@ -28,16 +28,16 @@ spec:
         - mountPath: /data/mysql
           name: mysql-storage
         env:     # bunları secretten alıyoruz.
-          - name: MYSQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: mysqlsecret
-                key: mysql-admin-pass
-          - name: MYSQL_ROOT_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: mysqlsecret
-                key: mysql-root-pass
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysqlsecret
+              key: mysql-admin-pass
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysqlsecret
+              key: mysql-root-pass
         envFrom: # bunu configmapten alıyoruz
-          - configMapRef:
-            name: database-config    #mysql  config name (myswl database=phonebook u buradan aldık)
+        - configMapRef:
+          name: database-config    #mysql  config name (myswl database=phonebook u buradan aldık)

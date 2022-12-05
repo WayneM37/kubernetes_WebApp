@@ -10,7 +10,6 @@ spec:         # service in tipi clusterip
   - port: 80       # service in portu
     targetPort: 80 # container portu
     nodeport: 30001    #nodeporttan dışarı çıkış
-    
   selector:
     app: add-delete   # buraya böyle isim verilmiş selector pod un label ını yakalaması önemli.
 

@@ -19,10 +19,10 @@ spec:
         - containerPort: 80
         env:      #bunu secretten alıyoruz
         - name: MYSQL_PASSWORD
-            valueFrom: 
-              secretKeyRef: 
-                name: mysqlsecret
-                key: mysql-admin-pass
+          valueFrom: 
+            secretKeyRef: 
+              name: mysqlsecret
+              key: mysql-admin-pass
         envFrom:
-        -configMapRef:
+        - configMapRef:
           name : server-config
