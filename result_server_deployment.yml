@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:result-server-deployment  #deployment ismi
+  name: result-server-deployment  #deployment ismi
 spec:  
   replicas: 1
   selector:
@@ -10,20 +10,36 @@ spec:
   template:   #pod template ile birlikte oluşuyor
     metadata:
       labels:
-        app: result-server    # service buradan bulacak
+        name: result-server    # service buradan bulacak
     spec:
       containers:
       - name: Con-result-server
         image: waynem37/image_for_result:4.0
         ports:
         - containerPort: 80
-        env:      #bunu secretten alıyoruz
+        env:     # bunları secretten alıyoruz.
         - name: MYSQL_PASSWORD
           valueFrom:
-            secretKeyRef: 
+            secretKeyRef:
               name: mysqlsecret
               key: mysql-admin-pass
-        envFrom:
-        - configMapRef:
-          name : server-config
-
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysqlsecret
+              key: mysql-root-pass
+        - name: MySQL_USER
+          valueFrom:
+            configMapKeyRef:
+              name: database-config
+              key: MySQL_USER
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: database-config
+              key: MYSQL_DATABASE
+        - name: MYSQL_DATABASE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: database-config
+              key: MYSQL_DATABASE_HOST

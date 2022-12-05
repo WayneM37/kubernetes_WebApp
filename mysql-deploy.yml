@@ -38,6 +38,18 @@ spec:
             secretKeyRef:
               name: mysqlsecret
               key: mysql-root-pass
-        envFrom: # bunu configmapten alıyoruz
-        - configMapRef:
-          name: database-config    #mysql  config name (myswl database=phonebook u buradan aldık)
+        - name: MySQL_USER
+          valueFrom:
+            configMapKeyRef:
+              name: database-config
+              key: MySQL_USER
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: database-config
+              key: MYSQL_DATABASE
+        - name: MYSQL_DATABASE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: database-config
+              key: MYSQL_DATABASE_HOST          

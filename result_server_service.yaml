@@ -3,13 +3,13 @@ kind: Service    # object çeşiti
 metadata:
   name: result-server-svc # isim verdik
   labels:
-    app: result-server
+    name: result-server
 spec:         # service in tipi clusterip
   type: Nodeport 
   ports:
   - name: http   
     port: 80       
     targetPort: 80
-    nodeport: 30002
+    nodePort: 30002
   selector:
-    app: result-server   # service pod u buradan bulacak
+    name: result-server   # service pod u buradan bulacak
