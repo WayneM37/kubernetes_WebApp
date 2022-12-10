@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: web-server-deploy
+  name: web-server-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-server-deploy
+  template:
+    metadata:
+      labels:
+        app: web-server-deploy
+    spec:
+      containers:
+      - image: waynem37/image_for_web:1.0
+        name: webserver    #isim verdik
+        ports:
+          - containerPort: 80      # containir portumuz
+#  envler mysqlden alıyoruz. 
+# Burada app.py de belirtilen "MYSQL_DATABASE_HOST" mysql in bulunduğu pod
+# o yüzden burada bunu vermemiz gerekiyor.
+          env:
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: user-password
+          envFrom:
+            - configMapRef:
+                name: servers-configmap
+
+#config ve secret kullanmasak bu şekilde alıyoruz.
+#        env:                        # envler mysqlden alıyoruz. 
+#          - name: MYSQL_DATABASE_HOST  # mysql in bulunduğu pod un adı (app.py den)
+#            value: mysql-service     # mysqle biz servis üzerinden ulaşıyoruz. servisin ismi (metadata)  
+#          - name: MYSQL_DATABASE     # app.pyden aldık. mysql deploya da da kullanmıştık.
+#            value: "phonebook"
+#          - name: MYSQL_USER
+#            value: "clarus"
+#          - name: MYSQL_PASSWORD
+#            value: "123"

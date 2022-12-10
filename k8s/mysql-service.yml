@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service  # servise isim verdik
+spec:
+  selector:
+    app: mysql-db   # mysql deployment da template in labelı (line 15)
+  ports:
+    - protocol: TCP
+      port: 3306   #mysql defaoult portu
+      targetPort: 3306   # mysql deployment ta containerport ile aynı

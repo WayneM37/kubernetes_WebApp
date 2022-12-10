@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: web-server-deploy
+  name: web-server-deploy
+spec:
+  ports:
+  - port: 80    # service in portu
+    protocol: TCP
+    targetPort: 80   # container portu
+    nodePort: 30001  #nodeporttan dışarı çıkış
+  selector:
+    app: web-server-deploy
+  type: NodePort

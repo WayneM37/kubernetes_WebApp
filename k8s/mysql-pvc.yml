@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim   #ismini verdik. 
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi    
+# bize bu kadar lazım pv den bu kadar kullanıcaz. 
+# ama yinede volume pv de ne varsa kullanır. 

@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment # deploymenta isim verdik. mysql deployment
+  labels:
+    app: mysql-db    # app kısmına da kendimiz isim veriyoruz. 
+spec:
+  replicas: 1        # tek bir replicadan oluşacak
+  selector:
+    matchLabels:
+      app: mysql-db   # burası da replica ismi.
+  template:    # template kısmı pod kısmı. 
+    metadata:
+      labels:
+        app: mysql-db   # podlarımızın ismi 11 ile 15 in aynı olması lazım
+    spec:
+      containers:
+      - name: mysql    # containirimizin ismi. 
+        image: mysql:5.7    #projede kullanmamız istenilen image. 
+        ports:
+        - containerPort: 3306    # containirin yayın yaptığı port..(burası bilgi amaçlı mevcudu değiştirmez)
+# environment valious ları yazıyoruz. key= valu şeklinde
+# Burada ilk env yi  MYSQL_ROOT_PASSWORD  docker hub mysql içerisinde envonmentlarda olması gerekenler bölümünden aldık
+# buraya bir şifre yazsak container çaışır. Ama root şifre açık yazılmaz. 
+# burada kullanacağımız environment variableslar developerların söylemesi gerekir.
+#şunları şunları env olarak aldık. yerien koyun diye.  biz app.py den aldıkk. 
+        env:     
+          - name: MYSQL_ROOT_PASSWORD # Bu zorunlu diğerleri optional
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret   # şifreyi alacağı secretin ismi
+                key: root-pasword   # secrete gidecek bu keyin değerini getirecek
+          - name: MYSQL_PASSWORD  # app py den aldık. 
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: user-password
+        envFrom:     # teker teker almamak için böyle yaptık
+          - configMapRef:
+              name: mysql-config   # configmap yml nin ismi
+        volumeMounts:           # volume oluşturduktan ve aşağıdaki claim kısmını yazdıktan sonra yaptık.
+          - name: mysql-volume   # bağlanacak olan volume, aşağıdan aldık.
+            mountPath: /var/lib/mysql      # containr içindeki bağlanacağı yeri. 
+      volumes:          #Burayı pv ce pvc oluşturduktan sonra yaptık
+        - name: mysql-volume   # volume isim verdik
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim   # bizim pvc mizin ismi
+# env leri secret ve configden almasaydık şu şekilde olurdu.
+# yukarıdaki kısmı secretleri oluştruduktan sonra yaptık
+# env:     
+#         - name: MYSQL_ROOT_PASSWORD # Bu zorunlu diğerleri optional
+#           value: "ab123"
+#          - name: MYSQL_DATABASE #app.yden aldık.
+#            value: "phonebook"     # ismini biz verdik. 
+#          - name: MYSQL_USER       # app.pyden aldık
+#            value: "wayne"      # ismi viz verdik
+#          - name: MYSQL_PASSWORD  # app py den aldık. 
+#            value: "123"        # şifreyi biz verdik
+
+#bu kısım secretle aynı ama teker teker almamak için yukarıdaki gibi yaptık.
+#- name: MYSQL_DATABASE # configmap oluşturduktan sonra yaptık.
+#   valueFrom:
+#     configMapKeyRef:
+#       name: mysql-config   # mysql configmap in ismi
+#       key: MYSQL_DATABASE #config dosyasındaki key.. bunun değerini alacak
