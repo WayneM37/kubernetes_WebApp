@@ -15,7 +15,7 @@ spec:
         app: web-server-deploy
     spec:
       containers:
-      - image: waynem37/image_for_web:1.0
+      - image: waynem37/webserver
         name: webserver    #isim verdik
         ports:
           - containerPort: 80      # containir portumuz

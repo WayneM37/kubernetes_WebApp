@@ -15,7 +15,7 @@ spec:
         app: result-server-deploy
     spec:
       containers:
-      - image: waynem37/image_for_result:4.0
+      - image: waynem37/resultserver
         name: resultserver    #isim verdik
         ports:
           - containerPort: 80      # containir portumuz
