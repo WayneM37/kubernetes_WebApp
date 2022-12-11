@@ -22,15 +22,15 @@ spec:
 #  envler mysqlden alıyoruz. 
 # Burada app.py de belirtilen "MYSQL_DATABASE_HOST" mysql in bulunduğu pod
 # o yüzden burada bunu vermemiz gerekiyor.
-          env:
-            - name: MYSQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-secret
-                  key: user-password
-          envFrom:
-            - configMapRef:
-                name: servers-configmap
+        env:
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: user-password
+        envFrom:
+          - configMapRef:
+              name: servers-configmap
 
 #config ve secret kullanmasak bu şekilde alıyoruz.
 #        env:                        # envler mysqlden alıyoruz. 
